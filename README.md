@@ -3,9 +3,9 @@
 ## Running the bot
 To use this bot:
 1. Create an application on the Discord Developer Portal
-2. Under the bot settings, enable "In-app Authorization" at the OAuth2 page
+2. Under the "Bot" settings, select URL Generator
 3. Select bot and application.commands scopes
-4. Select the same scopes in URL Generator and copy/paste the link to add the bot to your server
+4. Select "send messages" and "use slash commands" under "Bot Permissions" and copy/paste the link to add the bot to your server
 5. Get your bot token from the Bot page under Settings in the dev portal
 6. Pass in your token as the first parameter when running the bot class
 
