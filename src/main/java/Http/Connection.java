@@ -44,13 +44,15 @@ public class Connection {
 //        getInfoByPicApache(file);
     }
 
-    public static void getInfoByUrl(String url) throws Exception {
+    public static Response getInfoByUrl(String url) throws Exception {
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(new URI("https://api.trace.moe/search?url=" + url))
+                .uri(new URI("https://api.trace.moe/search?anilistInfo&url=" + url))
                 .build();
         HttpClient httpClient = HttpClient.newHttpClient();
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-        System.out.println(response.body());
+        Gson gson = new Gson();
+        Response response1 = gson.fromJson(response.body(), Response.class);
+        return response1;
     }
 
     public static Response getInfoByUrlApache(String url) throws Exception {

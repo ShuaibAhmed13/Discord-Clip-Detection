@@ -1,5 +1,6 @@
 package Bot;
 
+import Helper.Util;
 import Response.Response;
 import Response.Result;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -46,7 +47,7 @@ public class Bot extends ListenerAdapter {
                 String content = event.getOption("url").getAsString();
                 event.deferReply().queue();
                 try {
-                    Response response = Http.Connection.getInfoByUrlAnilistApache(content);
+                    Response response = Http.Connection.getInfoByUrl(content);
                     Result result = response.getResult(0);
 
                     event.getHook().sendMessage(response.getError())
@@ -60,12 +61,13 @@ public class Bot extends ListenerAdapter {
 //                                            event.getInteraction().getUser().getEffectiveAvatarUrl())
 //                                    .setThumbnail(result.getImage())
 //                                    .addBlankField(true)
-                                    .setFooter("Similarities under 90% indicate very high likeliness of inaccurate results")
+                                    .setFooter("Results with similarities under 90% are likely inaccurate")
                                     .setColor(new Color(84, 19, 168))
                                     .addField("Name: ", result.getAnilist().getTitle().getEnglish(), false)
                                     .addField("Episode: ", result.getEpisode(), false)
-                                    .addField("Similarity: ", result.getSimilarity() + "%", false)
-                                    .addField("Time in episode: ", result.getFrom() + " - " + result.getTo(), false)
+                                    .addField("Similarity: ", Util.getPercentage(result.getSimilarity()), false)
+                                    .addField("Time in episode: ", Util.getProperTimeFormat(result.getFrom()) +
+                                            " - " + Util.getProperTimeFormat(result.getTo()), false)
                                     .build())
                             .queue();
 //                    MessageChannel messageChannel = event.getMessageChannel();
@@ -84,7 +86,7 @@ public class Bot extends ListenerAdapter {
 //                    File file1 = file.downloadToFile().get(10, TimeUnit.SECONDS);
 //
 //                    Response response = Http.Connection.getInfoByPicApache(file1);
-                    Response response = Http.Connection.getInfoByUrlAnilistApache(file.getUrl());
+                    Response response = Http.Connection.getInfoByUrl(file.getUrl());
 
                     Result result = response.getResult(0);
 
@@ -99,12 +101,13 @@ public class Bot extends ListenerAdapter {
 //                                            event.getInteraction().getUser().getEffectiveAvatarUrl())
 //                                    .setThumbnail(result.getImage())
 //                                    .addBlankField(true)
-                                    .setFooter("Similarities under 90% indicate very high likeliness of inaccurate results")
+                                    .setFooter("Results with similarities under 90% are likely inaccurate")
                                     .setColor(new Color(84, 19, 168))
                                     .addField("Name: ", result.getAnilist().getTitle().getEnglish(), false)
                                     .addField("Episode: ", result.getEpisode(), false)
-                                    .addField("Similarity: ", result.getSimilarity() + "%", false)
-                                    .addField("Time in episode: ", result.getFrom() + " - " + result.getTo(), false)
+                                    .addField("Similarity: ", Util.getPercentage(result.getSimilarity()), false)
+                                    .addField("Time in episode: ", Util.getProperTimeFormat(result.getFrom()) +
+                                            " - " + Util.getProperTimeFormat(result.getTo()), false)
                                     .build())
                             .queue();
 
