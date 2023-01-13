@@ -61,9 +61,10 @@ public class Bot extends ListenerAdapter {
 //                                            event.getInteraction().getUser().getEffectiveAvatarUrl())
 //                                    .setThumbnail(result.getImage())
 //                                    .addBlankField(true)
-                                    .setFooter("Results with similarities under 90% are likely inaccurate")
+                                    .setFooter("Results with similarities under 90% are most likely inaccurate")
                                     .setColor(new Color(84, 19, 168))
                                     .addField("Name: ", result.getAnilist().getTitle().getEnglish(), false)
+                                    .addField("Romaji name: ", result.getAnilist().getTitle().getRomaji(), false)
                                     .addField("Episode: ", result.getEpisode(), false)
                                     .addField("Similarity: ", Util.getPercentage(result.getSimilarity()), false)
                                     .addField("Time in episode: ", Util.getProperTimeFormat(result.getFrom()) +
@@ -74,7 +75,8 @@ public class Bot extends ListenerAdapter {
 //                    messageChannel.sendMessage(response.getResult(0).getVideo()).queue();
 
                 } catch (Exception e) {
-                    throw new RuntimeException(e);
+                    event.getHook().sendMessage("Please provide a valid link").queue();
+                    return;
                 }
                 break;
             case "search-by-pic":
@@ -101,9 +103,10 @@ public class Bot extends ListenerAdapter {
 //                                            event.getInteraction().getUser().getEffectiveAvatarUrl())
 //                                    .setThumbnail(result.getImage())
 //                                    .addBlankField(true)
-                                    .setFooter("Results with similarities under 90% are likely inaccurate")
+                                    .setFooter("Results with similarities under 90% are most likely inaccurate")
                                     .setColor(new Color(84, 19, 168))
                                     .addField("Name: ", result.getAnilist().getTitle().getEnglish(), false)
+                                    .addField("Romaji name: ", result.getAnilist().getTitle().getRomaji(), false)
                                     .addField("Episode: ", result.getEpisode(), false)
                                     .addField("Similarity: ", Util.getPercentage(result.getSimilarity()), false)
                                     .addField("Time in episode: ", Util.getProperTimeFormat(result.getFrom()) +

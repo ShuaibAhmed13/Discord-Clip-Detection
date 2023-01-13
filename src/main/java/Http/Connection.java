@@ -52,6 +52,7 @@ public class Connection {
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
         Gson gson = new Gson();
         Response response1 = gson.fromJson(response.body(), Response.class);
+//        System.out.println(response.body());
         return response1;
     }
 
