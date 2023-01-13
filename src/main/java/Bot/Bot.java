@@ -2,32 +2,20 @@ package Bot;
 
 import Response.Response;
 import Response.Result;
-import com.sun.jdi.Field;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
-import net.dv8tion.jda.api.entities.*;
-import net.dv8tion.jda.api.events.GenericEvent;
+import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
-import net.dv8tion.jda.api.utils.FileUpload;
-import okhttp3.EventListener;
 import org.jetbrains.annotations.NotNull;
 
 import javax.security.auth.login.LoginException;
 import java.awt.*;
-import java.io.File;
-import java.io.FileInputStream;
-import java.lang.reflect.GenericArrayType;
-import java.net.URI;
-import java.net.URL;
-import java.security.Timestamp;
-import java.util.Date;
-import java.util.concurrent.TimeUnit;
 
 public class Bot extends ListenerAdapter {
 
@@ -55,12 +43,11 @@ public class Bot extends ListenerAdapter {
     public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
         switch (event.getName()) {
             case "search-by-url":
-                String content= event.getOption("url").getAsString();
+                String content = event.getOption("url").getAsString();
                 event.deferReply().queue();
-
                 try {
                     Response response = Http.Connection.getInfoByUrlAnilistApache(content);
-                    Result result  = response.getResult(0);
+                    Result result = response.getResult(0);
 
                     event.getHook().sendMessage(response.getError())
 //                    event.reply(response.getError()).setEphemeral(false)
@@ -68,15 +55,15 @@ public class Bot extends ListenerAdapter {
                             .addEmbeds(new EmbedBuilder()
                                     .setTitle(result.getAnilist().getTitle().getEnglish(), result.getVideo())
                                     .setImage(result.getImage())
-                                    .setAuthor(event.getInteraction().getUser().getName(),
-                                            event.getInteraction().getUser().getEffectiveAvatarUrl(),
-                                            event.getInteraction().getUser().getEffectiveAvatarUrl())
+//                                    .setAuthor(event.getInteraction().getUser().getName(),
+//                                            event.getInteraction().getUser().getEffectiveAvatarUrl(),
+//                                            event.getInteraction().getUser().getEffectiveAvatarUrl())
 //                                    .setThumbnail(result.getImage())
 //                                    .addBlankField(true)
                                     .setFooter("Similarities under 90% indicate very high likeliness of inaccurate results")
                                     .setColor(new Color(84, 19, 168))
                                     .addField("Name: ", result.getAnilist().getTitle().getEnglish(), false)
-                                    .addField("Episode: ", result.getEpisode(),false)
+                                    .addField("Episode: ", result.getEpisode(), false)
                                     .addField("Similarity: ", result.getSimilarity() + "%", false)
                                     .addField("Time in episode: ", result.getFrom() + " - " + result.getTo(), false)
                                     .build())
@@ -87,7 +74,45 @@ public class Bot extends ListenerAdapter {
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
+                break;
+            case "search-by-pic":
+                event.deferReply().queue();
+                Message.Attachment file = event.getOption("screenshot").getAsAttachment();
 
+//                System.out.println(file.downloadToFile());
+                try {
+//                    File file1 = file.downloadToFile().get(10, TimeUnit.SECONDS);
+//
+//                    Response response = Http.Connection.getInfoByPicApache(file1);
+                    Response response = Http.Connection.getInfoByUrlAnilistApache(file.getUrl());
+
+                    Result result = response.getResult(0);
+
+                    event.getHook().sendMessage(response.getError())
+//                    event.reply(response.getError()).setEphemeral(false)
+//                            .addEmbeds(new EmbedBuilder().setImage(result.getImage()).build())
+                            .addEmbeds(new EmbedBuilder()
+                                    .setTitle(result.getAnilist().getTitle().getEnglish(), result.getVideo())
+                                    .setImage(result.getImage())
+//                                    .setAuthor(event.getInteraction().getUser().getName(),
+//                                            event.getInteraction().getUser().getEffectiveAvatarUrl(),
+//                                            event.getInteraction().getUser().getEffectiveAvatarUrl())
+//                                    .setThumbnail(result.getImage())
+//                                    .addBlankField(true)
+                                    .setFooter("Similarities under 90% indicate very high likeliness of inaccurate results")
+                                    .setColor(new Color(84, 19, 168))
+                                    .addField("Name: ", result.getAnilist().getTitle().getEnglish(), false)
+                                    .addField("Episode: ", result.getEpisode(), false)
+                                    .addField("Similarity: ", result.getSimilarity() + "%", false)
+                                    .addField("Time in episode: ", result.getFrom() + " - " + result.getTo(), false)
+                                    .build())
+                            .queue();
+
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+                break;
         }
+
     }
 }

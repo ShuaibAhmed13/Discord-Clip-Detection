@@ -68,15 +68,19 @@ public class Connection {
 //        System.out.println(responseType.getResult(0).getEpisode());
         return responseType;
     }
-    public static void getInfoByPicApache(File file) throws Exception {
+    public static Response getInfoByPicApache(File file) throws Exception {
         CloseableHttpClient httpClient = HttpClients.createDefault();
-        HttpPost httpPost = new HttpPost("https://api.trace.moe/search");
+        HttpPost httpPost = new HttpPost("https://api.trace.moe/search?anilistInfo");
         MultipartEntityBuilder multipartEntityBuilder = MultipartEntityBuilder.create();
         multipartEntityBuilder.addPart("image", new FileBody(file));
         httpPost.setEntity(multipartEntityBuilder.build());
         CloseableHttpResponse httpResponse = httpClient.execute(httpPost);
         HttpEntity entity = httpResponse.getEntity();
-        System.out.println(EntityUtils.toString(entity));
+        String json = EntityUtils.toString(entity);
+//        System.out.println(json);
+        Gson gson = new Gson();
+        Response response = gson.fromJson(json, Response.class);
+        return response;
     }
 
     public static Response getInfoByUrlAnilistApache(String url) throws Exception {
